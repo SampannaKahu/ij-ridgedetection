@@ -20,138 +20,139 @@
  * #L%
  */
 package de.biomedical_imaging.ij.steger;
+
 /* Command line options for the program */
 public class Options {
-	  double sigma;
-	  double low;
-	  double high;
-	  int   mode;
-      double minLength;
-      double maxLength;
-	  boolean   correct;
-	  boolean   width;
-	  boolean   extend;
-	  boolean   postscript;
-	  boolean   encapsulated;
-	  boolean   image;
-		OverlapOption overlap;
-	  
-	  public Options(double sigma, double low, double high, int mode, double minLength, double maxLength, boolean correct, boolean width, boolean extend, boolean postscript, boolean encapsulated, boolean image, OverlapOption overlap) {
-		// TODO Auto-generated constructor stub
-		  this.sigma = sigma;
-		  this.low = low;
-		  this.high = high;
-		  this.mode = mode;
-		  this.correct = correct;
-		  this.width = width;
-		  this.extend = extend;
-		  this.postscript = postscript;
-		  this.encapsulated = encapsulated;
-		  this.image = image;
-		  this.overlap = overlap;
-	}
+    double        sigma;
+    double        low;
+    double        high;
+    int           mode;
+    double        minLength;
+    double        maxLength;
+    boolean       correct;
+    boolean       width;
+    boolean       extend;
+    boolean       postscript;
+    boolean       encapsulated;
+    boolean       image;
+    OverlapOption overlap;
 
-	public double getSigma() {
-		return sigma;
-	}
+    public Options(double sigma, double low, double high, int mode, double minLength, double maxLength, boolean correct, boolean width, boolean extend, boolean postscript, boolean encapsulated, boolean image, OverlapOption overlap) {
+        // TODO Auto-generated constructor stub
+        this.sigma = sigma;
+        this.low = low;
+        this.high = high;
+        this.mode = mode;
+        this.correct = correct;
+        this.width = width;
+        this.extend = extend;
+        this.postscript = postscript;
+        this.encapsulated = encapsulated;
+        this.image = image;
+        this.overlap = overlap;
+    }
 
-	public void setSigma(double sigma) {
-		this.sigma = sigma;
-	}
+    public double getSigma() {
+        return sigma;
+    }
 
-	public double getLow() {
-		return low;
-	}
+    public void setSigma(double sigma) {
+        this.sigma = sigma;
+    }
 
-	public void setLow(double low) {
-		this.low = low;
-	}
+    public double getLow() {
+        return low;
+    }
 
-	public double getHigh() {
-		return high;
-	}
+    public void setLow(double low) {
+        this.low = low;
+    }
 
-	public void setHigh(double high) {
-		this.high = high;
-	}
+    public double getHigh() {
+        return high;
+    }
 
-	public int getMode() {
-		return mode;
-	}
-    
+    public void setHigh(double high) {
+        this.high = high;
+    }
+
+    public int getMode() {
+        return mode;
+    }
+
     public double getminLength() {
         return minLength;
     }
-    
+
     public void setminLength(double minLength) {
         this.minLength = minLength;
     }
-    
+
     public double getmaxLength() {
         return maxLength;
     }
-    
+
     public void setmaxLength(double maxLength) {
         this.maxLength = maxLength;
     }
 
-	public void setMode(int mode) {
-		this.mode = mode;
-	}
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
 
-	public boolean isCorrect() {
-		return correct;
-	}
+    public boolean isCorrect() {
+        return correct;
+    }
 
-	public void setCorrect(boolean correct) {
-		this.correct = correct;
-	}
+    public void setCorrect(boolean correct) {
+        this.correct = correct;
+    }
 
-	public boolean isWidth() {
-		return width;
-	}
+    public boolean isWidth() {
+        return width;
+    }
 
-	public void setWidth(boolean width) {
-		this.width = width;
-	}
+    public void setWidth(boolean width) {
+        this.width = width;
+    }
 
-	public boolean isExtend() {
-		return extend;
-	}
+    public boolean isExtend() {
+        return extend;
+    }
 
-	public void setExtend(boolean extend) {
-		this.extend = extend;
-	}
+    public void setExtend(boolean extend) {
+        this.extend = extend;
+    }
 
-	public boolean isPostscript() {
-		return postscript;
-	}
+    public boolean isPostscript() {
+        return postscript;
+    }
 
-	public void setPostscript(boolean postscript) {
-		this.postscript = postscript;
-	}
+    public void setPostscript(boolean postscript) {
+        this.postscript = postscript;
+    }
 
-	public boolean isEncapsulated() {
-		return encapsulated;
-	}
+    public boolean isEncapsulated() {
+        return encapsulated;
+    }
 
-	public void setEncapsulated(boolean encapsulated) {
-		this.encapsulated = encapsulated;
-	}
+    public void setEncapsulated(boolean encapsulated) {
+        this.encapsulated = encapsulated;
+    }
 
-	public boolean isImage() {
-		return image;
-	}
+    public boolean isImage() {
+        return image;
+    }
 
-	public void setImage(boolean image) {
-		this.image = image;
-	}
+    public void setImage(boolean image) {
+        this.image = image;
+    }
 
-	public OverlapOption getOverlapResolution() {
-		return overlap;
-	}
+    public OverlapOption getOverlapResolution() {
+        return overlap;
+    }
 
-	public void setOverlapResolution(OverlapOption overlap) {
-		this.overlap = overlap;
-	}
+    public void setOverlapResolution(OverlapOption overlap) {
+        this.overlap = overlap;
+    }
 }

@@ -20,15 +20,16 @@
  * #L%
  */
 package de.biomedical_imaging.ij.steger;
+
 /* This data structure facilitates the quick search for the next possible
    starting point of a line.  An array of crossrefs will be accumulated and
    sorted according to its value.  x and y are the coordinates of a point in
    the image.  When this point has been processed it will be marked as done. */
-public class Crossref implements Comparable<Crossref>{
-	 short  x;
-	 short  y;
-	 double value;
-	 boolean   done;
+public class Crossref implements Comparable<Crossref> {
+    short   x;
+    short   y;
+    double  value;
+    boolean done;
 	 /*
  int compare_crossrefs(crossref p1, crossref p2) {
 		if (p1.value > p2.value)
@@ -38,17 +39,19 @@ public class Crossref implements Comparable<Crossref>{
 		return 0;
 	}
 	*/
-	
-	/*
-	 * This function compares two crossrefs according to their value. It is
-	 * called by qsort.
-	 */
-	 @Override
-	public int compareTo(Crossref arg0) {
-		if (this.value > arg0.value)
-			return -1;
-		if (this.value < arg0.value)
-			return 1;
-		return 0;
-	}
+
+    /*
+     * This function compares two crossrefs according to their value. It is
+     * called by qsort.
+     */
+    @Override
+    public int compareTo(Crossref arg0) {
+        if (this.value > arg0.value) {
+            return -1;
+        }
+        if (this.value < arg0.value) {
+            return 1;
+        }
+        return 0;
+    }
 }

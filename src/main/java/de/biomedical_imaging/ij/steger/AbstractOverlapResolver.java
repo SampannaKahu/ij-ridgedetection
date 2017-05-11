@@ -23,7 +23,7 @@ package de.biomedical_imaging.ij.steger;
 
 /**
  * Abstract superclass for {@link OverlapResolver} implementations.
- *
+ * <p/>
  * Provides default {@link #resolve(Lines, Junctions)} implementation that
  * defaults verbosity to {@code false}.
  *
@@ -31,8 +31,8 @@ package de.biomedical_imaging.ij.steger;
  */
 public abstract class AbstractOverlapResolver implements OverlapResolver {
 
-	@Override
-	public Lines resolve(final Lines lines, final Junctions junctions) {
-		return resolve(lines, junctions, false);
-	}
+    @Override
+    public Lines resolve(final Lines lines, final Junctions junctions) {
+        return resolve(lines, junctions, false);
+    }
 }

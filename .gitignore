@@ -4,3 +4,7 @@
 .settings/
 /target/
 /bin/
+/.idea/
+/ij_ridge_detect.ipr
+/ij_ridge_detect.iml
+/ij_ridge_detect.iws

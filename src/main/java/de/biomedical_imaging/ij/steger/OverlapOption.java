@@ -28,5 +28,6 @@ package de.biomedical_imaging.ij.steger;
  * @author Mark Hiner <hinerm@gmail.com>
  */
 public enum OverlapOption {
-	NONE, SLOPE;
+    NONE,
+    SLOPE;
 }

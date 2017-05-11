@@ -22,35 +22,33 @@
 package de.biomedical_imaging.ij.steger;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Lines extends ArrayList<Line> {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private int frame;
-	
-	/**
-	 * 
-	 * @param frame Slice number
-	 */
-	public Lines(int frame) {
-		// TODO Auto-generated constructor stub
-		this.frame = frame;
-	}
-	
-	public int getFrame(){
-		return frame;
-	}
-	
-	public int getIndexByID(int id){
-		for(int i = 0; i < this.size(); i++){
-			if(this.get(i).getID()==id){
-				return i;
-			}
-		}
-		return -1;
-	}
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private int frame;
+
+    /**
+     * @param frame Slice number
+     */
+    public Lines(int frame) {
+        // TODO Auto-generated constructor stub
+        this.frame = frame;
+    }
+
+    public int getFrame() {
+        return frame;
+    }
+
+    public int getIndexByID(int id) {
+        for (int i = 0; i < this.size(); i++) {
+            if (this.get(i).getID() == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }
