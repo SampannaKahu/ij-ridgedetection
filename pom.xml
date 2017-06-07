@@ -3,28 +3,28 @@
 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
  	<parent>
 		<groupId>net.imagej</groupId>
 		<artifactId>pom-imagej</artifactId>
 		<version>7.0.0</version>
 		<relativePath />
 	</parent>
-	
+
 	<groupId>de.biomedical-imaging.imagej</groupId>
 	<artifactId>ij_ridge_detect</artifactId>
 	<version>1.3.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
- 
+
 	<name>Ridge Detection Plugin for ImageJ</name>
 	<url>https://github.com/jumpfunky/ij-ridgedetection</url>
 	<inceptionYear>2014</inceptionYear>
-	
+
 	<issueManagement>
 		<system>GitHub Issues</system>
 		<url>https://github.com/thorstenwagner/ij-ridgedetection/issues</url>
 	</issueManagement>
-	
+
  	<dependencies>
 		<dependency>
    	 		<groupId>net.imagej</groupId>
@@ -36,8 +36,14 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     		<artifactId>commons-lang3</artifactId>
    			<version>3.4</version>
 		</dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.6.4</version>
+        </dependency>
+
 	</dependencies>
-	
+
 	<developers>
 		<developer>
 			<id>twagner</id>
@@ -67,7 +73,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 			<timezone>-6</timezone>
 		</contributor>
 	</contributors>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -79,6 +85,14 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 					<projectName>Ridge Detection plugin for ImageJ</projectName>
 				</configuration>
 			</plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 </project>

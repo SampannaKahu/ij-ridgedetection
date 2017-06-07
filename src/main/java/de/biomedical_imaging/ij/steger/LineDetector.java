@@ -21,6 +21,7 @@
  */
 package de.biomedical_imaging.ij.steger;
 
+import de.biomedical_imaging.ij.steger.run.LineDetectionConfig;
 import ij.IJ;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
@@ -65,6 +66,12 @@ public class LineDetector {
                              boolean doExtendLine) {
         return detectLines(ip, sigma, upperThresh, lowerThresh, minLength, maxLength, isDarkLine,
                            doCorrectPosition, doEstimateWidth, doExtendLine, OverlapOption.NONE);
+    }
+
+    public Lines detectLines(ImageProcessor ip, LineDetectionConfig lineDetectionConfig) {
+        return detectLines(ip, lineDetectionConfig.getSigma(), lineDetectionConfig.getUpperThreshold(), lineDetectionConfig.getLowerThreshold(),
+                           lineDetectionConfig.getMinLength(), lineDetectionConfig.getMaxLength(), lineDetectionConfig.isDarkLine(), lineDetectionConfig.isDoCorrectPosition(),
+                           lineDetectionConfig.isDoEstimateWidth(), lineDetectionConfig.isDoExtendLine());
     }
 
     public Lines detectLines(ImageProcessor ip, double sigma,

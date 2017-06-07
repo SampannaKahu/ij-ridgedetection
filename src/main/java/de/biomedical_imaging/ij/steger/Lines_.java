@@ -753,12 +753,12 @@ public class Lines_ implements ExtendedPlugInFilter, DialogListener {
 
         }
 
-        LineDetector detect = new LineDetector();
-        detect.bechatty = verbose;
+        LineDetector lineDetector = new LineDetector();
+        lineDetector.bechatty = verbose;
 
-        result.add(detect.detectLines(ip, sigma, upperThresh, lowerThresh, minLength, maxLength, isDarkLine, doCorrectPosition, doEstimateWidth, doExtendLine, overlapOption));
-        usedOptions = detect.getUsedParamters();
-        resultJunction.add(detect.getJunctions());
+        result.add(lineDetector.detectLines(ip, sigma, upperThresh, lowerThresh, minLength, maxLength, isDarkLine, doCorrectPosition, doEstimateWidth, doExtendLine, overlapOption));
+        usedOptions = lineDetector.getUsedParamters();
+        resultJunction.add(lineDetector.getJunctions());
 
         if (isPreview) {
             displayContours();
