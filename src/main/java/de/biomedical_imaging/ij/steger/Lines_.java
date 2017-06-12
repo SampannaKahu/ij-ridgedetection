@@ -22,6 +22,7 @@
 
 package de.biomedical_imaging.ij.steger;
 
+import de.biomedical_imaging.ij.steger.run.LineDetectionConfig;
 import ij.CompositeImage;
 import ij.IJ;
 import ij.ImagePlus;
@@ -184,7 +185,7 @@ public class Lines_ implements ExtendedPlugInFilter, DialogListener {
         this.imp = imp;
         result = new ArrayList<Lines>();
         resultJunction = new ArrayList<Junctions>();
-        readSettings();
+//        readSettings();
         return DOES_8G + DOES_STACKS + FINAL_PROCESSING + PARALLELIZE_STACKS;
     }
 
@@ -316,6 +317,31 @@ public class Lines_ implements ExtendedPlugInFilter, DialogListener {
         String overlapOptionString = Prefs.get("RidgeDetection.overlapOption", OverlapOption.NONE.name());
         overlapOption = OverlapOption.valueOf(overlapOptionString);
 
+    }
+
+    public void setConfig(LineDetectionConfig config) {
+        lineWidth = config.getLineWidth();
+        contrastHigh = config.getContrastHigh();
+        contrastLow = config.getContrastLow();
+        sigma = config.getSigma();
+        lowerThresh = config.getLowerThreshold();
+        upperThresh = config.getUpperThreshold();
+        minLength = config.getMinLength();
+        maxLength = config.getMaxLength();
+        isDarkLine = config.isDarkLine();
+        doCorrectPosition = config.isDoCorrectPosition();
+        doEstimateWidth = config.isDoEstimateWidth();
+        doExtendLine = config.isDoExtendLine();
+        showJunctionPoints = true;
+        showIDs = showIDsDefault;
+        verbose = verboseDefault;
+        displayResults = displayResultsDefault;
+        addToRoiManager = addToRoiManagerDefault;
+        makeBinary = makeBinaryDefault;
+        String overlapOptionString = OverlapOption.NONE.name();
+        overlapOption = OverlapOption.valueOf(overlapOptionString);
+
+        isPreview = true;
     }
 
     private void saveSettings() {
@@ -756,7 +782,9 @@ public class Lines_ implements ExtendedPlugInFilter, DialogListener {
         LineDetector lineDetector = new LineDetector();
         lineDetector.bechatty = verbose;
 
+        System.out.println("Starting actual line detection");
         result.add(lineDetector.detectLines(ip, sigma, upperThresh, lowerThresh, minLength, maxLength, isDarkLine, doCorrectPosition, doEstimateWidth, doExtendLine, overlapOption));
+        System.out.println("Line detection complete");
         usedOptions = lineDetector.getUsedParamters();
         resultJunction.add(lineDetector.getJunctions());
 

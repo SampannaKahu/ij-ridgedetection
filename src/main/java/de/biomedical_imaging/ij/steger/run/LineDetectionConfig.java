@@ -8,6 +8,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Created by sampanna.kahu on 03/06/17.
  */
 public class LineDetectionConfig {
+    private double lineWidth;
+    private double contrastHigh;
+    private double contrastLow;
     private double  sigma;
     private double  upperThreshold;
     private double  lowerThreshold;
@@ -31,6 +34,30 @@ public class LineDetectionConfig {
         this.doCorrectPosition = doCorrectPosition;
         this.doEstimateWidth = doEstimateWidth;
         this.doExtendLine = doExtendLine;
+    }
+
+    public double getLineWidth() {
+        return lineWidth;
+    }
+
+    public void setLineWidth(double lineWidth) {
+        this.lineWidth = lineWidth;
+    }
+
+    public double getContrastHigh() {
+        return contrastHigh;
+    }
+
+    public void setContrastHigh(double contrastHigh) {
+        this.contrastHigh = contrastHigh;
+    }
+
+    public double getContrastLow() {
+        return contrastLow;
+    }
+
+    public void setContrastLow(double contrastLow) {
+        this.contrastLow = contrastLow;
     }
 
     public double getSigma() {
