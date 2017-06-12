@@ -42,42 +42,95 @@ public class Main {
             System.out.println("File not found.");
         }
         ImageProcessor imageProcessor = new ColorProcessor(ImageIO.read(file));
+        LineDetector lineDetector = new LineDetector();
 
-        LineDetectionConfig config = new LineDetectionConfig();
+        LineDetectionConfig lesserLineConfig = new LineDetectionConfig();
         //set the default configs values.
-        config.setSigma(9.9);
-        config.setUpperThreshold(0.2);
-        config.setLowerThreshold(0.00);
-        config.setMinLength(10);
-        config.setMaxLength(1410);
-        config.setDarkLine(true);
-        config.setDoCorrectPosition(true);
-        config.setDoEstimateWidth(false);
-        config.setDoExtendLine(true);
-
-        double clow = 0;
-        double chigh = 0;
-        double lineWidth = 0;
+        lesserLineConfig.setSigma(9.9);
+        lesserLineConfig.setUpperThreshold(0.2);
+        lesserLineConfig.setLowerThreshold(0.00);
+        lesserLineConfig.setMinLength(120);
+        lesserLineConfig.setMaxLength(2000);
+        lesserLineConfig.setDarkLine(true);
+        lesserLineConfig.setDoCorrectPosition(true);
+        lesserLineConfig.setDoEstimateWidth(false);
+        lesserLineConfig.setDoExtendLine(true);
 
         // Detect lines
         System.out.println("Starting line detection.");
-        LineDetector lineDetector = new LineDetector();
-        Lines lines = lineDetector.detectLines(imageProcessor, config);
-        BufferedImage bufferedImage = displayContours(lines, imageProcessor, config.isDoEstimateWidth());
-        displayImage(bufferedImage);
+        Lines lesserLines = lineDetector.detectLines(imageProcessor, lesserLineConfig);
+        BufferedImage bufferedImage1 = displayContours(lesserLines, imageProcessor, lesserLineConfig.isDoEstimateWidth());
+        displayImage(bufferedImage1, "lesser lines");
         System.out.println("Line Detection Complete.");
 
-        System.out.println("Getting overlay polygons");
-        Overlay overlay = getOverlayPolygon(lines, imageProcessor, config.isDoEstimateWidth());
-        displayOverlayOnImage(imageProcessor, overlay);
-        System.out.println("Done.");
+        LineDetectionConfig moreLineConfig = new LineDetectionConfig();
+        //set the default configs values.
+        moreLineConfig.setSigma(9.9);
+        moreLineConfig.setUpperThreshold(0.2);
+        moreLineConfig.setLowerThreshold(0.00);
+        moreLineConfig.setMinLength(10);
+        moreLineConfig.setMaxLength(1410);
+        moreLineConfig.setDarkLine(true);
+        moreLineConfig.setDoCorrectPosition(true);
+        moreLineConfig.setDoEstimateWidth(false);
+        moreLineConfig.setDoExtendLine(true);
+
+        // Detect lines
+        System.out.println("Starting line detection.");
+        Lines moreLines = lineDetector.detectLines(imageProcessor, moreLineConfig);
+        BufferedImage bufferedImage2 = displayContours(moreLines, imageProcessor, moreLineConfig.isDoEstimateWidth());
+        displayImage(bufferedImage2, "more lines");
+        System.out.println("Line Detection Complete.");
+
+        Lines accumulatedLines = findJoinedLines(lesserLines, moreLines, 3f);
+        BufferedImage bufferedImage3 = displayContours(accumulatedLines, imageProcessor, false);
+        displayImage(bufferedImage3, "accumulated lines");
+
+
+//-----------------------------------------------------------
+//        System.out.println("Getting overlay polygons");
+//        Overlay overlay = getOverlayPolygon(lines, imageProcessor, config.isDoEstimateWidth());
+//        displayOverlayOnImage(imageProcessor, overlay);
+//        System.out.println("Done.");
     }
 
-    private static void displayOverlayOnImage(ImageProcessor imageProcessor, Overlay overlay) {
+    private static Lines findJoinedLines(Lines lesserLines, Lines moreLines, float gapTolerance) {
+        Lines outputLines = new Lines(0);
+        lesserLines.forEach(line -> {
+            //add the current line to the output
+            outputLines.add(line);
+            //search and add to output
+            for (int i = 0; i < line.getNumber(); i++) {
+                outputLines.addAll(findLinesPassingThroughPoint(line.getXCoordinates()[i], line.getYCoordinates()[i], moreLines, gapTolerance));
+            }
+        });
+        return outputLines;
+    }
+
+    private static Lines findLinesPassingThroughPoint(float xCoordinate, float yCoordinate, Lines searchableLines, float searchTolerance) {
+        Lines matchedLines = new Lines(0);
+        searchableLines.forEach(searchableLine -> {
+            if (containsIn(searchableLine.getXCoordinates(), xCoordinate, searchTolerance) && containsIn(searchableLine.getYCoordinates(), yCoordinate, searchTolerance)) {
+                matchedLines.add(searchableLine);
+            }
+        });
+        return matchedLines;
+    }
+
+    private static boolean containsIn(float[] arrayToSearchIn, float termToSearch, float tolerance) {
+        for (float possibleMatch : arrayToSearchIn) {
+            if (Math.abs(possibleMatch - termToSearch) < tolerance) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void displayOverlayOnImage(ImageProcessor imageProcessor, Overlay overlay, String title) {
         for (int i = 0; i < overlay.size(); i++) {
             overlay.get(i).drawPixels(imageProcessor);
         }
-        JFrame frame = new JFrame("2");
+        JFrame frame = new JFrame(title);
         frame.getContentPane().setLayout(new FlowLayout());
         frame.getContentPane().add(new JLabel(new ImageIcon(imageProcessor.getBufferedImage())));
         frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
@@ -85,8 +138,8 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private static void displayImage(BufferedImage image) {
-        JFrame frame = new JFrame("1");
+    private static void displayImage(BufferedImage image, String title) {
+        JFrame frame = new JFrame(title);
         frame.getContentPane().setLayout(new FlowLayout());
         frame.getContentPane().add(new JLabel(new ImageIcon(image)));
         frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
