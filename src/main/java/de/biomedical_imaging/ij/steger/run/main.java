@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 
@@ -43,48 +44,92 @@ public class Main {
         }
         ImageProcessor imageProcessor = new ColorProcessor(ImageIO.read(file));
         LineDetector lineDetector = new LineDetector();
+//
+//        LineDetectionConfig lesserLineConfig = new LineDetectionConfig();
+//        //set the default configs values.
+//        lesserLineConfig.setSigma(9.9);
+//        lesserLineConfig.setUpperThreshold(0.2);
+//        lesserLineConfig.setLowerThreshold(0.00);
+//        lesserLineConfig.setMinLength(120);
+//        lesserLineConfig.setMaxLength(2000);
+//        lesserLineConfig.setDarkLine(true);
+//        lesserLineConfig.setDoCorrectPosition(true);
+//        lesserLineConfig.setDoEstimateWidth(false);
+//        lesserLineConfig.setDoExtendLine(true);
 
-        LineDetectionConfig lesserLineConfig = new LineDetectionConfig();
+        java.util.List<Double> minLengthList = new ArrayList<>();
+        minLengthList.add(130.0);
+        minLengthList.add(120.0);
+        minLengthList.add(110.0);
+        minLengthList.add(100.0);
+        minLengthList.add(90.0);
+        minLengthList.add(80.0);
+        minLengthList.add(70.0);
+        minLengthList.add(60.0);
+        minLengthList.add(50.0);
+        minLengthList.add(40.0);
+//        minLengthList.add(30.0);
+
+        LineDetectionConfig config = new LineDetectionConfig();
         //set the default configs values.
-        lesserLineConfig.setSigma(9.9);
-        lesserLineConfig.setUpperThreshold(0.2);
-        lesserLineConfig.setLowerThreshold(0.00);
-        lesserLineConfig.setMinLength(120);
-        lesserLineConfig.setMaxLength(2000);
-        lesserLineConfig.setDarkLine(true);
-        lesserLineConfig.setDoCorrectPosition(true);
-        lesserLineConfig.setDoEstimateWidth(false);
-        lesserLineConfig.setDoExtendLine(true);
+        config.setSigma(9.9);
+        config.setUpperThreshold(0.2);
+        config.setLowerThreshold(0.00);
+        config.setMinLength(140);
+        config.setMaxLength(2000);
+        config.setDarkLine(true);
+        config.setDoCorrectPosition(true);
+        config.setDoEstimateWidth(true);
+        config.setDoExtendLine(true);
+
+        final Lines[] lesserLines = {lineDetector.detectLines(imageProcessor, config)};
+
+        minLengthList.forEach(minLength -> {
+            System.out.println("De-duplicating lines.");
+            lesserLines[0] = deduplicateLines(lesserLines[0]);
+            System.out.println("Printing lines for minLenght=" + config.getMinLength());
+            BufferedImage bufferedImage = displayContours(lesserLines[0], imageProcessor, config.isDoEstimateWidth());
+            System.out.println("Displaying lines for minLenght=" + config.getMinLength());
+            displayImage(bufferedImage, "Detected lines for minLength=" + config.getMinLength());
+            config.setMinLength(minLength);
+            System.out.println("Starting detection for minLength=" + config.getMinLength());
+            Lines moreLines = lineDetector.detectLines(imageProcessor, config);
+            System.out.println("Accumulating lines for minLength=" + config.getMinLength());
+            lesserLines[0] = findJoinedLines(lesserLines[0], moreLines, 4f);
+        });
+
+        BufferedImage bufferedImage = displayContours(lesserLines[0], imageProcessor, config.isDoEstimateWidth());
+        displayImage(bufferedImage, "Detected lines for minLength=" + config.getMinLength());
 
         // Detect lines
-        System.out.println("Starting line detection.");
-        Lines lesserLines = lineDetector.detectLines(imageProcessor, lesserLineConfig);
-        BufferedImage bufferedImage1 = displayContours(lesserLines, imageProcessor, lesserLineConfig.isDoEstimateWidth());
-        displayImage(bufferedImage1, "lesser lines");
-        System.out.println("Line Detection Complete.");
-
-        LineDetectionConfig moreLineConfig = new LineDetectionConfig();
-        //set the default configs values.
-        moreLineConfig.setSigma(9.9);
-        moreLineConfig.setUpperThreshold(0.2);
-        moreLineConfig.setLowerThreshold(0.00);
-        moreLineConfig.setMinLength(10);
-        moreLineConfig.setMaxLength(1410);
-        moreLineConfig.setDarkLine(true);
-        moreLineConfig.setDoCorrectPosition(true);
-        moreLineConfig.setDoEstimateWidth(false);
-        moreLineConfig.setDoExtendLine(true);
-
-        // Detect lines
-        System.out.println("Starting line detection.");
-        Lines moreLines = lineDetector.detectLines(imageProcessor, moreLineConfig);
-        BufferedImage bufferedImage2 = displayContours(moreLines, imageProcessor, moreLineConfig.isDoEstimateWidth());
-        displayImage(bufferedImage2, "more lines");
-        System.out.println("Line Detection Complete.");
-
-        Lines accumulatedLines = findJoinedLines(lesserLines, moreLines, 3f);
-        BufferedImage bufferedImage3 = displayContours(accumulatedLines, imageProcessor, false);
-        displayImage(bufferedImage3, "accumulated lines");
+//        System.out.println("Starting line detection.");
+//        Lines lesserLines = lineDetector.detectLines(imageProcessor, lesserLineConfig);
+//        BufferedImage bufferedImage1 = displayContours(lesserLines, imageProcessor, lesserLineConfig.isDoEstimateWidth());
+//        displayImage(bufferedImage1, "lesser lines");
+//        System.out.println("Line Detection Complete.");
+//
+//        LineDetectionConfig moreLineConfig = new LineDetectionConfig();
+//        //set the default configs values.
+//        moreLineConfig.setSigma(9.9);
+//        moreLineConfig.setUpperThreshold(0.2);
+//        moreLineConfig.setLowerThreshold(0.00);
+//        moreLineConfig.setMinLength(10);
+//        moreLineConfig.setMaxLength(1410);
+//        moreLineConfig.setDarkLine(true);
+//        moreLineConfig.setDoCorrectPosition(true);
+//        moreLineConfig.setDoEstimateWidth(false);
+//        moreLineConfig.setDoExtendLine(true);
+//
+//        // Detect lines
+//        System.out.println("Starting line detection.");
+//        Lines moreLines = lineDetector.detectLines(imageProcessor, moreLineConfig);
+//        BufferedImage bufferedImage2 = displayContours(moreLines, imageProcessor, moreLineConfig.isDoEstimateWidth());
+//        displayImage(bufferedImage2, "more lines");
+//        System.out.println("Line Detection Complete.");
+//
+//        Lines accumulatedLines = findJoinedLines(lesserLines, moreLines, 3f);
+//        BufferedImage bufferedImage3 = displayContours(accumulatedLines, imageProcessor, false);
+//        displayImage(bufferedImage3, "accumulated lines");
 
 
 //-----------------------------------------------------------
@@ -94,6 +139,26 @@ public class Main {
 //        System.out.println("Done.");
     }
 
+    private static Lines deduplicateLines(Lines lines) {
+        Lines uniqueLines = new Lines(0);
+        //iterate over each input lines and add it to the unique lines list depending on checks.
+        lines.forEach(line -> {
+            final boolean[] duplicateFound = {false};
+            // iterate over each unique line.
+            uniqueLines.forEach(uniqueLine -> {
+                //check if the line of interest is equal to the current unique line. If duplicate is found, set the flag to true.
+                if (Arrays.equals(uniqueLine.getXCoordinates(), line.getXCoordinates()) && Arrays.equals(uniqueLine.getYCoordinates(), line.getYCoordinates())) {
+                    duplicateFound[0] = true;
+                }
+            });
+            //if no duplicates were found, add the line of interest to the unique lines.
+            if (!duplicateFound[0]) {
+                uniqueLines.add(line);
+            }
+        });
+        return uniqueLines;
+    }
+
     private static Lines findJoinedLines(Lines lesserLines, Lines moreLines, float gapTolerance) {
         Lines outputLines = new Lines(0);
         lesserLines.forEach(line -> {
@@ -101,13 +166,13 @@ public class Main {
             outputLines.add(line);
             //search and add to output
             for (int i = 0; i < line.getNumber(); i++) {
-                outputLines.addAll(findLinesPassingThroughPoint(line.getXCoordinates()[i], line.getYCoordinates()[i], moreLines, gapTolerance));
+                outputLines.addAll(centerToCenterNearnessSearch(line.getXCoordinates()[i], line.getYCoordinates()[i], moreLines, gapTolerance));
             }
         });
         return outputLines;
     }
 
-    private static Lines findLinesPassingThroughPoint(float xCoordinate, float yCoordinate, Lines searchableLines, float searchTolerance) {
+    private static Lines centerToCenterNearnessSearch(float xCoordinate, float yCoordinate, Lines searchableLines, float searchTolerance) {
         Lines matchedLines = new Lines(0);
         searchableLines.forEach(searchableLine -> {
             if (containsIn(searchableLine.getXCoordinates(), xCoordinate, searchTolerance) && containsIn(searchableLine.getYCoordinates(), yCoordinate, searchTolerance)) {
@@ -116,6 +181,14 @@ public class Main {
         });
         return matchedLines;
     }
+
+    //TODO: WIP
+//    private static Lines centerToEdgeNearnessSearch(float xCoordinateOfEdgePoint, float yCoordinateOfEdgePoint, Lines searchableines, float searchTolerance) {
+//        Lines matchedLines = new Lines(0);
+//        searchableines.forEach(searchableLine -> {
+//            if ()
+//        });
+//    }
 
     private static boolean containsIn(float[] arrayToSearchIn, float termToSearch, float tolerance) {
         for (float possibleMatch : arrayToSearchIn) {
