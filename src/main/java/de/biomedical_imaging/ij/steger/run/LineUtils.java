@@ -8,10 +8,13 @@ import ij.gui.PolygonRoi;
 import ij.gui.Roi;
 import ij.process.FloatPolygon;
 import ij.process.ImageProcessor;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by sampanna.kahu on 14/06/17.
@@ -196,5 +199,38 @@ public class LineUtils {
 //            }
 //        }
         return overlay;
+    }
+
+    public static Lines filterLinesUsingBWImage(Lines inputLines, ImageProcessor bwImage, int searchProximity, float probability_threshold) {
+        Lines outputLines = new Lines(0);
+        boolean[][] binaryImage = ImageUtils.rgb2bw(bwImage.getBufferedImage(), 0.5);
+        inputLines.forEach(line -> {
+            if (isWidthCalculated(line)) {
+                Set<Coor> coordinates = new HashSet<>();
+
+            }
+        });
+        return outputLines;
+    }
+
+    private static Set<Coor> getNearbyCoordinates(boolean[][] inputImage, int x, int y, int searchProximity) {
+        Set<Coor> coordinates = new HashSet<>();
+        for (int i = x - searchProximity; i < x + searchProximity; i++) {
+            for (int j = y - searchProximity; j < y + searchProximity; j++) {
+                if (i < 0 || y < 0 || i > inputImage[0].length || j > inputImage[0].length) {
+                    continue;
+                }
+                coordinates.add(new Coor(i, j));
+            }
+        }
+        return coordinates;
+    }
+
+    public static boolean isWidthCalculated(Line line) {
+        int number = line.getNumber();
+        if (ArrayUtils.isEmpty(line.getLineWidthL()) || ArrayUtils.isEmpty(line.getLineWidthR())) {
+            return false;
+        }
+        return true;
     }
 }
